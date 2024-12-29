@@ -20,10 +20,10 @@ namespace Ribbon
         {
             _apiClient = new ApiClient(token);
         }
-
-        public async Task<GenericListResponse<Mod>> SearchMods()
+        
+        public async Task<GenericListResponse<Mod>> SearchMods(int index)
         {
-            return await _apiClient.SearchModsAsync(432);
+            return await _apiClient.SearchModsAsync(432, index: index);
         }
     }
 }

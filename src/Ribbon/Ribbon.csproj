@@ -11,6 +11,7 @@
     <PackageReference Include="CurseForge.APIClient" Version="3.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
+    <PackageReference Include="Terminal.Gui" Version="2.0.0-prealpha.1533" />
   </ItemGroup>
 
 </Project>
