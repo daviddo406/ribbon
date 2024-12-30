@@ -17,25 +17,14 @@ namespace Ribbon
     {
         private ApiClient _apiClient;
 
-        public ModRepository(string token)
+        public ModRepository()
         {
-            _apiClient = new ApiClient(token);
+            _apiClient = new ApiClient("$2a$10$96h3LX0zd4NF9fTroK0Du.06R.mear0mOhpN.ax9B.8DUH.JM6A4K");
         }
         
-        public async Task<DataTable> SearchMods(int index)
+        public async Task<GenericListResponse<Mod>> SearchMods(int index)
         {
-            GenericListResponse<Mod> res = await _apiClient.SearchModsAsync(432, index: index);
-
-            DataTable table = new DataTable();
-            table.Columns.Add("Id");
-            table.Columns.Add("Name");
-            table.Columns.Add("Desc");
-            foreach (Mod mod in res.Data)
-            {
-                table.Rows.Add(mod.Id, mod.Name, mod.Summary);
-            }
-
-            return table;
+            return await _apiClient.SearchModsAsync(432, index: index);
         }
     }
 }

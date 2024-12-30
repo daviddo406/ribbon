@@ -1,10 +1,24 @@
-﻿using Ribbon;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Ribbon;
+using Ribbon.Commands;
+using Spectre.Console.Cli;
 
-var repo = new ModRepository("$2a$10$96h3LX0zd4NF9fTroK0Du.06R.mear0mOhpN.ax9B.8DUH.JM6A4K");
-var res = await repo.SearchMods(0);
-MyWindow window = new MyWindow();
-window.AddData(res);
-window.Show();
-// ModView view = new();
-// await view.Show(repo);
+var registrations = new ServiceCollection();
+registrations.AddSingleton<ModView>();
+registrations.AddSingleton<ModRepository>();
+registrations.AddSingleton<ModDriver>();
 
+// Create a type registrar and register any dependencies.
+// A type registrar is an adapter for a DI framework.
+var registrar = new TypeRegistrar(registrations);
+
+var app = new CommandApp(registrar);
+app.Configure(config =>
+{
+    config.AddCommand<ListModsCommand>("list")
+        .WithDescription("Lists all mods.");
+    config.AddCommand<AddModCommand>("add")
+        .WithDescription("Gets the file size for a directory.");
+});
+
+return app.Run(args);

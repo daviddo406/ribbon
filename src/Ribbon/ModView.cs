@@ -11,61 +11,27 @@ public class ModView
     
     public ModView()
     {
-        _table = new Table();
-        _table.Border(TableBorder.Rounded);
-        _table.ShowRowSeparators = true;
+        _table = new Table
+        {
+            ShowRowSeparators = true
+        };
 
         _table.AddColumn("id");
         _table.AddColumn("name");
         _table.AddColumn("desc");
+        
+        _table.Collapse();
     }
 
-    public async Task Show(ModRepository repository)
+    public Table Register(IEnumerable<IRenderable[]> rows)
     {
-        //int page = 0;
-        //while (true)
-        //{
-        //    var mods = await repository.SearchMods(page);
-            
-        //    List<int> ids = [];
-        //    List<string> names = [];
-        //    List<string> summaries = [];
-        //    foreach (Mod mod in mods.Data)
-        //    {
-        //        ids.Add(mod.Id);
-        //        names.Add(mod.Name);
-        //        summaries.Add(mod.Summary);
-        //    }
+        foreach (var row in rows) _table.AddRow(row);
 
-        //    for (int i = 0; i < ids.Count; i++)
-        //    {
-        //        Text id = new Text(ids[i].ToString(), new Style(Color.Teal));
-        //        Text name = new Text(names[i], new Style(Color.Yellow));
-        //        Text summary = new Text(summaries[i]);
-        //        IRenderable[] row =
-        //        [
-        //            id, name, summary
-        //        ];
-        //        _table.AddRow(row);
-        //    }
-
-        //    AnsiConsole.Write(_table);
-        //    if (NavigationPrompt()) page += 1;
-        //    else
-        //    {
-        //        if (page > 0) page -= 1;
-        //    };
-        //}
+        return _table;
     }
 
-    private bool NavigationPrompt()
+    public Table GetRenderable()
     {
-        var nav = AnsiConsole.Prompt(
-            new TextPrompt<bool>("Next page?")
-                .AddChoice(true)
-                .AddChoice(false)
-                .DefaultValue(true)
-                .WithConverter(choice => choice ? "n" : "p"));
-        return nav;
+        return _table;
     }
 }
