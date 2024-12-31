@@ -22,9 +22,32 @@ namespace Ribbon
             _apiClient = new ApiClient("$2a$10$96h3LX0zd4NF9fTroK0Du.06R.mear0mOhpN.ax9B.8DUH.JM6A4K");
         }
         
-        public async Task<GenericListResponse<Mod>> SearchMods(int index)
+        public List<Mod>? SearchMods(int index)
         {
-            return await _apiClient.SearchModsAsync(432, index: index);
+            var req = _apiClient.SearchModsAsync(432, index: index);
+            req.Wait();
+            return req.Result.Data;
+        }
+
+        public Mod? GetModById(int id)
+        {
+            var req = _apiClient.GetModAsync(id);
+            req.Wait();
+            return req.Result.Data;
+        }
+
+        public Mod? GetModByName(string name)
+        {
+            var req = _apiClient.SearchModsAsync(432, searchFilter: name);
+            req.Wait();
+            return req.Result.Data.FirstOrDefault();
+        }
+
+        public string GetModFileDownloadUrl(Mod mod, int fileId)
+        {
+            var req = _apiClient.GetModFileDownloadUrlAsync(mod.Id, fileId);
+            req.Wait();
+            return req.Result.Data;
         }
     }
 }
