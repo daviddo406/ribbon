@@ -4,7 +4,7 @@ using File = CurseForge.APIClient.Models.Files.File;
 
 namespace Ribbon.Models;
 
-public class FileDetail
+public class DetailedModFile
 {
     public string Name { get; set; }
     

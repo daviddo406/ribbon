@@ -45,7 +45,7 @@ public class AddModCommand : Command<AddModCommand.Settings>
         if (isConfirmed)
         {
             AnsiConsole.MarkupInterpolated($"[bold blue]Adding mod: {mod.Id} - {mod.Name}[/]");
-            _modManager.AddMod(mod);
+            _modManager.AddMod(res[0]);
         }
         else
         {
@@ -55,9 +55,9 @@ public class AddModCommand : Command<AddModCommand.Settings>
         return 0;
     }
 
-    private List<FileDetail> GetModLoaders(Mod mod)
+    private List<DetailedModFile> GetModLoaders(Mod mod)
     {
-        List<FileDetail> fileDetails = new();
+        List<DetailedModFile> fileDetails = new();
         
         // mods can have different dependencies based on mod loader
         if (mod.LatestFiles.Count == 0)
@@ -67,25 +67,25 @@ public class AddModCommand : Command<AddModCommand.Settings>
         
         foreach (File file in mod.LatestFiles)
         {
-            FileDetail fileDetail = new();
+            DetailedModFile detailedModFile = new();
             foreach (string version in file.GameVersions)
             {
                 if (Enum.TryParse(version, true, out ModLoaderType loader))
                 {
-                    fileDetail.ModLoaderType = loader;
+                    detailedModFile.ModLoaderType = loader;
                 }
                 else
                 {
-                    fileDetail.GameVersion = version;
+                    detailedModFile.GameVersion = version;
                 }
             }
-
-            fileDetail.Name = file.DisplayName;
-            fileDetail.File = file;
-            fileDetail.FileDependencies = file.Dependencies ?? new List<FileDependency>();
-            fileDetail.ModDependencies = file.Dependencies?.Count > 0 ? DetermineDependencies(file.Dependencies) : new List<Mod>(); 
             
-            fileDetails.Add(fileDetail);
+            detailedModFile.Name = file.DisplayName;
+            detailedModFile.File = file;
+            detailedModFile.FileDependencies = file.Dependencies ?? new List<FileDependency>();
+            detailedModFile.ModDependencies = file.Dependencies?.Count > 0 ? DetermineDependencies(file.Dependencies) : new List<Mod>(); 
+            
+            fileDetails.Add(detailedModFile);
         }
         
         return fileDetails;
