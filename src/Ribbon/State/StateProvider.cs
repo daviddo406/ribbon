@@ -26,8 +26,8 @@ public class StateProvider
             Options = new StateOptions();
             return;                        
         }
-        JsonSerializer.Deserialize<StateOptions>(content);
-        Options =  new StateOptions();
+        
+        Options = JsonSerializer.Deserialize<StateOptions>(content);;
     }
 
     public void SaveOptions()
