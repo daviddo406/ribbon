@@ -48,12 +48,15 @@ public class AddModCommand : Command<AddModCommand.Settings>
     {
         Rule rule = new Rule($"Found Mod: [bold green]{dmf.Name}[/] -- {dmf.File.DisplayName}");
         rule.Justification = Justify.Left;
-        Rows rows = new Rows(dmf.FileDependencies.Select(x => new Text(x.DisplayName)));
-        Panel panel = new Panel(rows);
-        panel.Header = new PanelHeader("[blue]Dependencies[/]");
-        
         AnsiConsole.Write(rule);
-        AnsiConsole.Write(panel);
+
+        if (dmf.FileDependencies.Count > 0)
+        {
+            Rows rows = new Rows(dmf.FileDependencies.Select(x => new Text(x.DisplayName)));
+            Panel panel = new Panel(rows);
+            panel.Header = new PanelHeader("[blue]Dependencies[/]");
+            AnsiConsole.Write(panel);
+        }
     }
     
     private bool PromptConfirmation(DetailedModFile dmf)
