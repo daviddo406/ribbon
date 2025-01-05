@@ -22,7 +22,12 @@ public class ModAdapter
     public void Initialize()
     {
     }
-
+    
+    /// <summary>
+    /// Accepts a modId and creates a <c>DetailedModFile</c> from the original mod.
+    /// Used to determine the latest file for a mod and its dependencies.
+    /// <param name="modId">The name of a mod.</param>
+    /// </summary>
     public DetailedModFile? Process(string modId)
     {
         Mod? mod = _modRepository.GetModByName(modId);
