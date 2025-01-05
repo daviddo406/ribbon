@@ -1,3 +1,4 @@
+using System.Net;
 using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
 using File = CurseForge.APIClient.Models.Files.File;
@@ -22,8 +23,33 @@ public class ModAdapter
     public DetailedModFile Process(Mod mod)
     {
         List<File> modFiles = _modRepository.GetModFiles(mod.Id, 0).OrderBy(x => x.DisplayName).ToList();
+
+        File actualModFile = modFiles.Last(); // last is most up-to-date version
+        
+        var dependencies = GetDependencies(actualModFile);
+        
+        using (var client = new WebClient())
+        {
+            foreach (var dependency in dependencies)
+            {
+                client.DownloadFile(dependency.DownloadUrl, "./mods/" + dependency.FileName);
+            }
+            client.DownloadFile(actualModFile.DownloadUrl, "./mods/" + actualModFile.FileName);
+        }
         
         return new DetailedModFile();
+    }
+
+    private List<File> GetDependencies(File file)
+    {
+        List<File> dependencies = new List<File>();
+        foreach (var dependency in file.Dependencies)
+        {
+            List<File> files = _modRepository.GetModFiles(dependency.ModId, 0);
+            dependencies.Add(files.Last());
+        }
+        
+        return dependencies;
     }
     
     // private List<DetailedModFile> ProcessMod(Mod mod)

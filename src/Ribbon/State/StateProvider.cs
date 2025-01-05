@@ -9,6 +9,7 @@ public class StateProvider
     public StateProvider()
     {
         GetOptions();
+        CreateDirectories();
     }
     
     private void GetOptions()
@@ -30,6 +31,11 @@ public class StateProvider
         Options = JsonSerializer.Deserialize<StateOptions>(content);;
     }
 
+    private void CreateDirectories()
+    {
+        Directory.CreateDirectory("./mods");
+    }
+    
     public void SaveOptions()
     {
         var content = JsonSerializer.Serialize(Options);
