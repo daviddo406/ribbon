@@ -8,6 +8,7 @@ var registrations = new ServiceCollection();
 registrations.AddSingleton<ModView>();
 registrations.AddSingleton<StateProvider>();
 registrations.AddSingleton<ModRepository>();
+registrations.AddSingleton<ModAdapter>();
 registrations.AddSingleton<ModDriver>();
 registrations.AddSingleton<ModManager>();
 

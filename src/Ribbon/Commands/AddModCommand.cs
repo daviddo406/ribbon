@@ -21,11 +21,14 @@ public class AddModCommand : Command<AddModCommand.Settings>
 
     private readonly ModRepository _modRepository;
     
+    private readonly ModAdapter _modAdapter;
+    
     private readonly ModManager _modManager;
     
-    public AddModCommand(ModRepository modRepository, ModManager modManager)
+    public AddModCommand(ModRepository modRepository, ModAdapter modAdapter, ModManager modManager)
     {
         _modRepository = modRepository;
+        _modAdapter = modAdapter;
         _modManager = modManager;
     }
     
@@ -37,69 +40,40 @@ public class AddModCommand : Command<AddModCommand.Settings>
             AnsiConsole.MarkupLineInterpolated($"No mod found with id {settings.ModId}");
             return 0;
         }
-        AnsiConsole.MarkupLineInterpolated($"Found Mod: [bold green]{mod.Name}[/]");
 
-        var res = GetModLoaders(mod);
+        DetailedModFile dmf = _modAdapter.Process(mod);
+        StageAdd(dmf);
 
-        bool isConfirmed = AnsiConsole.Prompt(new ConfirmationPrompt("\nAdd mod?"));
-        if (isConfirmed)
-        {
-            AnsiConsole.MarkupInterpolated($"[bold blue]Adding mod: {mod.Id} - {mod.Name}[/]");
-            _modManager.AddMod(res[0]);
-        }
-        else
-        {
-            AnsiConsole.MarkupInterpolated($"[bold yellow]No action on mod: {mod.Id} - {mod.Name}[/].");
-        }
+        PromptConfirmation(dmf);
         
         return 0;
     }
 
-    private List<DetailedModFile> GetModLoaders(Mod mod)
+    private void StageAdd(DetailedModFile dmf)
     {
-        List<DetailedModFile> fileDetails = new();
+        Rule rule = new Rule($"[bold green]{dmf.Name}[/] -- {dmf.File.DisplayName}");
+        rule.Justification = Justify.Left;
+        Rows rows = new Rows(dmf.FileDependencies.Select(x => new Text(x.DisplayName)));
+        Panel panel = new Panel(rows);
+        panel.Header = new PanelHeader("[blue]Dependencies[/]");
         
-        // mods can have different dependencies based on mod loader
-        if (mod.LatestFiles.Count == 0)
-        {
-            AnsiConsole.MarkupLine("[red]No files found. No action taken.[/]");
-        }
-        
-        foreach (File file in mod.LatestFiles)
-        {
-            DetailedModFile detailedModFile = new();
-            foreach (string version in file.GameVersions)
-            {
-                if (Enum.TryParse(version, true, out ModLoaderType loader))
-                {
-                    detailedModFile.ModLoaderType = loader;
-                }
-                else
-                {
-                    detailedModFile.GameVersion = version;
-                }
-            }
-            
-            detailedModFile.Name = file.DisplayName;
-            detailedModFile.File = file;
-            detailedModFile.FileDependencies = file.Dependencies ?? new List<FileDependency>();
-            detailedModFile.ModDependencies = file.Dependencies?.Count > 0 ? DetermineDependencies(file.Dependencies) : new List<Mod>(); 
-            
-            fileDetails.Add(detailedModFile);
-        }
-        
-        return fileDetails;
+        AnsiConsole.Write(rule);
+        AnsiConsole.Write(panel);
     }
     
-    private List<Mod> DetermineDependencies(List<FileDependency> dependencies)
+    private bool PromptConfirmation(DetailedModFile dmf)
     {
-        List<Mod> dependencyMods = new();
-        foreach (FileDependency dependency in dependencies)
+        bool isConfirmed = AnsiConsole.Prompt(new ConfirmationPrompt("\nAdd mod?"));
+        if (isConfirmed)
         {
-            Mod? mod = _modRepository.GetModById(dependency.ModId);
-            if (mod != null) dependencyMods.Add(mod);
+            _modManager.AddMod(dmf);
+            AnsiConsole.MarkupInterpolated($"[bold blue]Added mod: {dmf.Id} - {dmf.Name}[/]");
         }
-        return dependencyMods;
+        else
+        {
+            AnsiConsole.MarkupInterpolated($"[bold yellow]No action on mod: {dmf.Id} - {dmf.Name}[/].");
+        }
+        return isConfirmed;
     }
     
 }

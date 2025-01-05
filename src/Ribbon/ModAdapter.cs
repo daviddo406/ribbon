@@ -1,6 +1,7 @@
 using System.Net;
 using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
+using Ribbon.State;
 using File = CurseForge.APIClient.Models.Files.File;
 
 namespace Ribbon;
@@ -10,9 +11,12 @@ public class ModAdapter
 
     private readonly ModRepository _modRepository;
     
-    public ModAdapter(ModRepository modRepository)
+    private readonly StateProvider _stateProvider;
+    
+    public ModAdapter(ModRepository modRepository, StateProvider stateProvider)
     {
         _modRepository = modRepository;
+        _stateProvider = stateProvider;
     }
 
     public void Initialize()
@@ -28,16 +32,9 @@ public class ModAdapter
         
         var dependencies = GetDependencies(actualModFile);
         
-        using (var client = new WebClient())
-        {
-            foreach (var dependency in dependencies)
-            {
-                client.DownloadFile(dependency.DownloadUrl, "./mods/" + dependency.FileName);
-            }
-            client.DownloadFile(actualModFile.DownloadUrl, "./mods/" + actualModFile.FileName);
-        }
+        DetailedModFile dmf = new(mod.Id, mod.Name, actualModFile, _stateProvider.Options.ModLoaderType, _stateProvider.Options.GameVersion, dependencies);
         
-        return new DetailedModFile();
+        return dmf;
     }
 
     private List<File> GetDependencies(File file)
@@ -52,39 +49,4 @@ public class ModAdapter
         return dependencies;
     }
     
-    // private List<DetailedModFile> ProcessMod(Mod mod)
-    // {
-    //     List<DetailedModFile> fileDetails = new();
-    //     
-    //     // mods can have different dependencies based on mod loader
-    //     if (mod.LatestFiles.Count == 0)
-    //     {
-    //         AnsiConsole.MarkupLine("[red]No files found. No action taken.[/]");
-    //     }
-    //     
-    //     foreach (File file in mod.LatestFiles)
-    //     {
-    //         DetailedModFile detailedModFile = new();
-    //         foreach (string version in file.GameVersions)
-    //         {
-    //             if (Enum.TryParse(version, true, out ModLoaderType loader))
-    //             {
-    //                 detailedModFile.ModLoaderType = loader;
-    //             }
-    //             else
-    //             {
-    //                 detailedModFile.GameVersion = version;
-    //             }
-    //         }
-    //         
-    //         detailedModFile.Name = file.DisplayName;
-    //         detailedModFile.File = file;
-    //         detailedModFile.FileDependencies = file.Dependencies ?? new List<FileDependency>();
-    //         detailedModFile.ModDependencies = file.Dependencies?.Count > 0 ? DetermineDependencies(file.Dependencies) : new List<Mod>(); 
-    //         
-    //         fileDetails.Add(detailedModFile);
-    //     }
-    //     
-    //     return fileDetails;
-    // }
 }
