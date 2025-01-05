@@ -18,40 +18,35 @@ public class AddModCommand : Command<AddModCommand.Settings>
         public bool UseName { get; set; }
     
     }
-
-    private readonly ModRepository _modRepository;
     
     private readonly ModAdapter _modAdapter;
     
     private readonly ModManager _modManager;
     
-    public AddModCommand(ModRepository modRepository, ModAdapter modAdapter, ModManager modManager)
+    public AddModCommand(ModAdapter modAdapter, ModManager modManager)
     {
-        _modRepository = modRepository;
         _modAdapter = modAdapter;
         _modManager = modManager;
     }
     
     public override int Execute(CommandContext context, Settings settings)
     {
-        Mod? mod = settings.UseName ? _modRepository.GetModByName(settings.ModId) : _modRepository.GetModById(Int32.Parse(settings.ModId));
-        if (mod == null || mod.IsAvailable == false)
+        DetailedModFile? dmf = _modAdapter.Process(settings.ModId);
+        if (dmf == null)
         {
             AnsiConsole.MarkupLineInterpolated($"No mod found with id {settings.ModId}");
             return 0;
         }
-
-        DetailedModFile dmf = _modAdapter.Process(mod);
-        StageAdd(dmf);
-
+        
+        StageView(dmf);
         PromptConfirmation(dmf);
         
         return 0;
     }
 
-    private void StageAdd(DetailedModFile dmf)
+    private void StageView(DetailedModFile dmf)
     {
-        Rule rule = new Rule($"[bold green]{dmf.Name}[/] -- {dmf.File.DisplayName}");
+        Rule rule = new Rule($"Found Mod: [bold green]{dmf.Name}[/] -- {dmf.File.DisplayName}");
         rule.Justification = Justify.Left;
         Rows rows = new Rows(dmf.FileDependencies.Select(x => new Text(x.DisplayName)));
         Panel panel = new Panel(rows);

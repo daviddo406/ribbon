@@ -21,14 +21,16 @@ public class ModAdapter
 
     public void Initialize()
     {
-        
     }
 
-    public DetailedModFile Process(Mod mod)
+    public DetailedModFile? Process(string modId)
     {
+        Mod? mod = _modRepository.GetModByName(modId);
+        if (mod == null || mod.IsAvailable == false) return null;
+        
         List<File> modFiles = _modRepository.GetModFiles(mod.Id, 0).OrderBy(x => x.DisplayName).ToList();
 
-        File actualModFile = modFiles.Last(); // last is most up-to-date version
+        File actualModFile = modFiles.Last(); // last entry is the most up-to-date version
         
         var dependencies = GetDependencies(actualModFile);
         
