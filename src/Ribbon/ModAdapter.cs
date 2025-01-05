@@ -33,9 +33,9 @@ public class ModAdapter
         Mod? mod = _modRepository.GetModByName(modId);
         if (mod == null || mod.IsAvailable == false) return null;
         
-        List<File> modFiles = _modRepository.GetModFiles(mod.Id, 0).OrderBy(x => x.DisplayName).ToList();
+        List<File> modFiles = _modRepository.GetModFiles(mod.Id, 0).OrderByDescending(x => x.FileDate).ToList();
 
-        File actualModFile = modFiles.Last(); // last entry is the most up-to-date version
+        File actualModFile = modFiles.First();
         
         var dependencies = GetDependencies(actualModFile);
         
@@ -49,8 +49,8 @@ public class ModAdapter
         List<File> dependencies = new List<File>();
         foreach (var dependency in file.Dependencies)
         {
-            List<File> files = _modRepository.GetModFiles(dependency.ModId, 0);
-            dependencies.Add(files.Last());
+            List<File> files = _modRepository.GetModFiles(dependency.ModId, 0).OrderByDescending(x => x.FileDate).ToList();
+            dependencies.Add(files.First());
         }
         
         return dependencies;
