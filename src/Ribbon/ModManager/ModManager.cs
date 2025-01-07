@@ -1,13 +1,24 @@
+using System.Collections.Specialized;
 using System.Net;
 using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
-using File = CurseForge.APIClient.Models.Files.File;
 
 namespace Ribbon;
 
-public class ModManager
+public class ModManager : INotifyCollectionChanged
 {
     public Dictionary<int, DetailedModFile> InstalledMods { get; protected set; } = new ();
+    
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+    
+    private readonly ModWriter _modWriter;
+
+    public ModManager(ModWriter modWriter)
+    {
+        _modWriter = modWriter;
+
+        CollectionChanged += (o, e) => _modWriter.Write(InstalledMods, e);
+    }
     
     public void AddMod(DetailedModFile dmf)
     {
