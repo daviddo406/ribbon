@@ -3,7 +3,6 @@ using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using File = CurseForge.APIClient.Models.Files.File;
 
 namespace Ribbon.Commands;
 
