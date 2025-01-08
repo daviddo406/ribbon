@@ -30,6 +30,8 @@ app.Configure(config =>
         .WithDescription("Lists all mods.");
     config.AddCommand<AddModCommand>("add")
         .WithDescription("Gets the file size for a directory.");
+    config.AddCommand<ClearModsCommand>("clear")
+        .WithDescription("Clears all mods.");
 });
 
 return app.Run(args);
