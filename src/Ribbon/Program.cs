@@ -9,7 +9,7 @@ registrations.AddSingleton<ModView>();
 registrations.AddSingleton<StateProvider>();
 registrations.AddSingleton<ModRepository>();
 registrations.AddSingleton<ModAdapter>();
-registrations.AddSingleton<ModDriver>();
+registrations.AddSingleton<ModWriter>();
 registrations.AddSingleton<ModManager>();
 
 // Create a type registrar and register any dependencies.
