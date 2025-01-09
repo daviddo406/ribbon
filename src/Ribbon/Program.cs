@@ -5,7 +5,6 @@ using Ribbon.State;
 using Spectre.Console.Cli;
 
 var registrations = new ServiceCollection();
-registrations.AddSingleton<ModView>();
 registrations.AddSingleton<StateProvider>();
 registrations.AddSingleton<ModRepository>();
 registrations.AddSingleton<ModAdapter>();

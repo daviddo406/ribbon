@@ -1,12 +1,5 @@
 ﻿using CurseForge.APIClient;
-using CurseForge.APIClient.Models;
 using CurseForge.APIClient.Models.Mods;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ribbon.State;
 using File = CurseForge.APIClient.Models.Files.File;
 
