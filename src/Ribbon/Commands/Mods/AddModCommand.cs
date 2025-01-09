@@ -30,7 +30,7 @@ public class AddModCommand : Command<AddModCommand.Settings>
     
     public override int Execute(CommandContext context, Settings settings)
     {
-        DetailedModFile? dmf = _modAdapter.Process(settings.ModId);
+        DetailedModFile? dmf = _modAdapter.Process(settings.ModId, settings.UseName);
         if (dmf == null)
         {
             AnsiConsole.MarkupLineInterpolated($"No mod found with id {settings.ModId}");
@@ -45,7 +45,7 @@ public class AddModCommand : Command<AddModCommand.Settings>
 
     private void StageView(DetailedModFile dmf)
     {
-        Rule rule = new Rule($"Found Mod: [bold green]{dmf.Name}[/] -- {dmf.File.DisplayName}");
+        Rule rule = new Rule($"Found Mod: [bold green]{Markup.Escape(dmf.Name)}[/] -- {Markup.Escape(dmf.File.DisplayName)}");
         rule.Justification = Justify.Left;
         AnsiConsole.Write(rule);
 

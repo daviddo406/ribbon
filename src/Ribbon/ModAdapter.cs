@@ -1,4 +1,4 @@
-using System.Net;
+using CurseForge.APIClient.Models.Files;
 using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
 using Ribbon.State;
@@ -28,13 +28,15 @@ public class ModAdapter
     /// Used to determine the latest file for a mod and its dependencies.
     /// <param name="modId">The name of a mod.</param>
     /// </summary>
-    public DetailedModFile? Process(string modId)
+    public DetailedModFile? Process(string modId, bool isName = false)
     {
-        Mod? mod = _modRepository.GetModByName(modId);
+        Mod? mod = isName ? _modRepository.GetModByName(modId) : _modRepository.GetModById(Int32.Parse(modId));
+        
         if (mod == null || mod.IsAvailable == false) return null;
         
         List<File> modFiles = _modRepository.GetModFiles(mod.Id, 0).OrderByDescending(x => x.FileDate).ToList();
-
+        if (modFiles.Count == 0) return null;
+        
         File actualModFile = modFiles.First();
         
         var dependencies = GetDependencies(actualModFile);
@@ -47,10 +49,10 @@ public class ModAdapter
     private List<File> GetDependencies(File file)
     {
         List<File> dependencies = new List<File>();
-        foreach (var dependency in file.Dependencies)
+        foreach (var dependency in file.Dependencies.Where(x => x.RelationType == FileRelationType.RequiredDependency))
         {
             List<File> files = _modRepository.GetModFiles(dependency.ModId, 0).OrderByDescending(x => x.FileDate).ToList();
-            dependencies.Add(files.First());
+            if(files.Count != 0) dependencies.Add(files.First());
         }
         
         return dependencies;
