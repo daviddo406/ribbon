@@ -1,9 +1,9 @@
 ﻿using CurseForge.APIClient;
 using CurseForge.APIClient.Models.Mods;
-using Ribbon.State;
+using Ribbon.Services.State;
 using File = CurseForge.APIClient.Models.Files.File;
 
-namespace Ribbon
+namespace Ribbon.Repositories
 {
     // API_KEY = "$2a$10$96h3LX0zd4NF9fTroK0Du.06R.mear0mOhpN.ax9B.8DUH.JM6A4K"
     // MINECRAFT_ID = 432

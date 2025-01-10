@@ -1,10 +1,11 @@
 using CurseForge.APIClient.Models.Files;
 using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
-using Ribbon.State;
+using Ribbon.Repositories;
+using Ribbon.Services.State;
 using File = CurseForge.APIClient.Models.Files.File;
 
-namespace Ribbon;
+namespace Ribbon.Services.Adapter;
 
 public class ModAdapter
 {
@@ -17,10 +18,6 @@ public class ModAdapter
     {
         _modRepository = modRepository;
         _stateProvider = stateProvider;
-    }
-
-    public void Initialize()
-    {
     }
     
     /// <summary>

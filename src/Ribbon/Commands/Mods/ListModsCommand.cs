@@ -1,8 +1,10 @@
-using Ribbon.State;
+using Ribbon.Services.Manager;
+using Ribbon.Services.State;
+using Ribbon.Views;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace Ribbon.Commands;
+namespace Ribbon.Commands.Mods;
 
 public class ListModsCommand : Command<ListModsCommand.Settings>
 {

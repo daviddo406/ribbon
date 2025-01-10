@@ -1,17 +1,17 @@
-using CurseForge.APIClient.Models.Files;
-using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
+using Ribbon.Services.Adapter;
+using Ribbon.Services.Manager;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace Ribbon.Commands;
+namespace Ribbon.Commands.Mods;
 
 public class AddModCommand : Command<AddModCommand.Settings>
 {
     public class Settings : CommandSettings
     {
         [CommandArgument(0, "<ModId>")]
-        public string ModId { get; set; }
+        public required string ModId { get; set; }
         
         [CommandOption("-n|--name")]
         public bool UseName { get; set; }

@@ -1,9 +1,8 @@
-using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
-using Ribbon.State;
+using Ribbon.Services.State;
 using Spectre.Console;
 
-namespace Ribbon;
+namespace Ribbon.Views;
 
 public static class ListModsView
 {

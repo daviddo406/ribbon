@@ -1,6 +1,7 @@
+using Ribbon.Services.Manager;
 using Spectre.Console.Cli;
 
-namespace Ribbon.Commands;
+namespace Ribbon.Commands.Mods;
 
 public class ClearModsCommand : Command<ClearModsCommand.Settings>
 {

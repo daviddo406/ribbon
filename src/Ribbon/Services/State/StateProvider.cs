@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Ribbon.State;
+namespace Ribbon.Services.State;
 
 public class StateProvider
 {

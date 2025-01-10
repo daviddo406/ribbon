@@ -1,7 +1,8 @@
 using System.Text;
 using CurseForge.APIClient.Models.Mods;
+using Ribbon.Services.Manager.Writer;
 
-namespace Ribbon.State;
+namespace Ribbon.Services.State;
 
 public class StateOptions
 {

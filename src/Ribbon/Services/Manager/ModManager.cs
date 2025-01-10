@@ -4,7 +4,7 @@ using System.Text.Json;
 using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
 
-namespace Ribbon;
+namespace Ribbon.Services.Manager;
 
 public class ModManager : INotifyCollectionChanged
 {

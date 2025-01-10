@@ -1,15 +1,24 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Ribbon;
-using Ribbon.Commands;
-using Ribbon.State;
+using Ribbon.Commands.Mods;
+using Ribbon.Commands.State;
+using Ribbon.Services.Adapter;
+using Ribbon.Services.Manager;
+using Ribbon.Services.State;
 using Spectre.Console.Cli;
 
 var registrations = new ServiceCollection();
-registrations.AddSingleton<StateProvider>();
-registrations.AddSingleton<ModRepository>();
-registrations.AddSingleton<ModAdapter>();
-registrations.AddSingleton<ModWriter>();
-registrations.AddSingleton<ModManager>();
+
+var stateProvider = new StateProvider();
+registrations.AddSingleton<StateProvider>(_ => stateProvider);
+
+var modManagerBuilder = new ModManagerBuilder(stateProvider);
+modManagerBuilder.AddWriter();
+registrations.AddSingleton<ModManager>(_ => modManagerBuilder.Build());
+
+var modAdapterBuilder = new ModAdapterBuilder(stateProvider);
+modAdapterBuilder.AddRepository();
+registrations.AddSingleton<ModAdapter>(_ => modAdapterBuilder.Build());
 
 // Create a type registrar and register any dependencies.
 // A type registrar is an adapter for a DI framework.

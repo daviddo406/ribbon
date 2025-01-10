@@ -1,9 +1,8 @@
 using CurseForge.APIClient.Models.Mods;
-using Ribbon.State;
-using Spectre.Console;
+using Ribbon.Services.State;
 using Spectre.Console.Cli;
 
-namespace Ribbon.Commands;
+namespace Ribbon.Commands.State;
 
 public class ConfigureSettings : CommandSettings
 {
