@@ -10,6 +10,7 @@ public class StateOptions
     
     public string GameVersion { get; set; }
 
+    public ModWriter.ModWriterOptions ModWriterOptions { get; set; } = new();
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
