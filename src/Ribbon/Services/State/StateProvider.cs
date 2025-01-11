@@ -1,45 +1,42 @@
+using System.ComponentModel;
 using System.Text.Json;
+using Ribbon.Services.Manager.Writer;
 
 namespace Ribbon.Services.State;
 
 public class StateProvider
 {
-    public StateOptions Options;
+    
+    public readonly StateOptions Options = GetOptions();
+    
+    private const string _stateFileName = "ribbon-options.json";
 
     public StateProvider()
     {
-        GetOptions();
-        CreateDirectories();
+        Options.PropertyChanged += SaveOptions;
+        Options.ModWriterOptions.PropertyChanged += SaveOptions;
     }
     
-    private void GetOptions()
+    private static StateOptions GetOptions()
     {
-        if (File.Exists("ribbon.json") == false)
+        if (File.Exists(_stateFileName) == false)
         {
-            File.CreateText("ribbon.json");
-            Options = new StateOptions();
-            return;
+            return new StateOptions();
         }
         
-        string content = File.ReadAllText("ribbon.json");
+        string content = File.ReadAllText(_stateFileName);
         if (string.IsNullOrEmpty(content))
         {
-            Options = new StateOptions();
-            return;                        
+            return new StateOptions();
         }
         
-        Options = JsonSerializer.Deserialize<StateOptions>(content);;
-    }
-
-    private void CreateDirectories()
-    {
-        Directory.CreateDirectory("./mods");
+        return JsonSerializer.Deserialize<StateOptions>(content)!;
     }
     
-    public void SaveOptions()
+    public void SaveOptions(object? sender, PropertyChangedEventArgs e)
     {
         var content = JsonSerializer.Serialize(Options);
-        File.WriteAllText("ribbon.json", content);
+        File.WriteAllText(_stateFileName, content);
     }
     
 }

@@ -32,7 +32,6 @@ public class ConfigureGameVersionCommand(StateProvider stateProvider) : Command<
     public override int Execute(CommandContext context, ConfigureGameVersionSettings settings)
     {
         stateProvider.Options.GameVersion = settings.GameVersion;
-        stateProvider.SaveOptions();
         return 0;
     }
 }
@@ -42,7 +41,6 @@ public class ConfigureModLoaderCommand(StateProvider stateProvider) : Command<Co
     public override int Execute(CommandContext context, ConfigureModLoaderSettings settings)
     {
         stateProvider.Options.ModLoaderType = settings.ModLoaderType;
-        stateProvider.SaveOptions();
         return 0;
     }
 }
@@ -51,8 +49,7 @@ public class ConfigureModWriterCommand(StateProvider stateProvider) : Command<Co
 {
     public override int Execute(CommandContext context, ConfigureModWriterSettings settings)
     {
-        stateProvider.Options.ModWriterOptions.OutputDirectory = settings.OutputDirectory.ToString();
-        stateProvider.SaveOptions();
+        stateProvider.Options.ModWriterOptions.OutputDirectory = settings.OutputDirectory;
         return 0;
     }
     
