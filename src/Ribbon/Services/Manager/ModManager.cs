@@ -12,20 +12,22 @@ public class ModManager : INotifyCollectionChanged
     
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
     
-    private readonly ModWriter _modWriter;
-
-    public ModManager(ModWriter modWriter)
+    public delegate void CollectionChangedObserver(Dictionary<int, DetailedModFile> sender, NotifyCollectionChangedEventArgs e);
+    
+    public ModManager()
     {
         Initialize();
-        _modWriter = modWriter;
-
-        CollectionChanged += (o, e) => _modWriter.Write(_installedMods, e);
     }
 
     private void Initialize()
     {
         var content = File.ReadAllText("ribbon-saved-mods.json");
         _installedMods = JsonSerializer.Deserialize<Dictionary<int, DetailedModFile>>(content);
+    }
+
+    public void Subscribe(CollectionChangedObserver subscriber)
+    {
+        CollectionChanged += (o, e) => subscriber(_installedMods, e);
     }
 
     public IEnumerable<DetailedModFile> GetMods()
@@ -36,7 +38,7 @@ public class ModManager : INotifyCollectionChanged
     public void AddMod(DetailedModFile dmf)
     {
         _installedMods[dmf.Id] = dmf;
-        CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, dmf));
+        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, dmf));
         // TODO
         // Would be good to separate this into its own service, i.e. ClientModDownloader
         using (var client = new WebClient())
