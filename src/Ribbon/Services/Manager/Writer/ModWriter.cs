@@ -10,13 +10,15 @@ public class ModWriter(ModWriter.ModWriterOptions options)
 {
     public class ModWriterOptions : INotifyPropertyChanged
     {
-        private string _outputDirectory = Path.Combine(Environment.CurrentDirectory, "mods");
+        private string _outputDirectory = Path.Combine(Environment.CurrentDirectory, OutputFileName);
 
         public string OutputDirectory
         {
             get => _outputDirectory;
-            set => SetField(ref _outputDirectory, value);
+            set => SetField(ref _outputDirectory, Path.Combine(value, OutputFileName));
         }
+        
+        public const string OutputFileName = "mods.json";
         
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -37,6 +39,6 @@ public class ModWriter(ModWriter.ModWriterOptions options)
     public void Write(Dictionary<int, DetailedModFile>? data, NotifyCollectionChangedEventArgs e)
     {
         var content = JsonSerializer.Serialize(data);
-        File.WriteAllText(Path.Combine(options.OutputDirectory), content);
+        File.WriteAllText(options.OutputDirectory, content);
     }
 }
