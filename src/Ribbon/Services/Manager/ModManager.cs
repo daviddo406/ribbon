@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using CurseForge.APIClient.Models.Mods;
 using Ribbon.Models;
+using Ribbon.Services.Manager.Writer;
 
 namespace Ribbon.Services.Manager;
 
@@ -10,18 +11,16 @@ public class ModManager : INotifyCollectionChanged
 {
     private Dictionary<int, DetailedModFile> _installedMods { get; set; } = new();
     
+    public ModWriter.ModWriterOptions ModWriterOptions { get; set; }
+    
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
     
     public delegate void CollectionChangedObserver(Dictionary<int, DetailedModFile> sender, NotifyCollectionChangedEventArgs e);
     
-    public ModManager()
+    public void Initialize()
     {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
-        var content = File.ReadAllText("ribbon-saved-mods.json");
+        if (File.Exists(ModWriterOptions.OutputFullPath) == false) return;
+        var content = File.ReadAllText(ModWriterOptions.OutputFullPath);
         _installedMods = JsonSerializer.Deserialize<Dictionary<int, DetailedModFile>>(content);
     }
 
@@ -45,9 +44,9 @@ public class ModManager : INotifyCollectionChanged
         {
             foreach (var dependency in dmf.FileDependencies)
             {
-                client.DownloadFile(dependency.DownloadUrl, "./mods/" + dependency.FileName);
+                client.DownloadFile(dependency.DownloadUrl, ModWriterOptions.OutputDirectory + dependency.FileName);
             }
-            client.DownloadFile(dmf.File.DownloadUrl, "./mods/" + dmf.File.FileName);
+            client.DownloadFile(dmf.File.DownloadUrl, ModWriterOptions.OutputDirectory + dmf.File.FileName);
         }
     }
     
@@ -55,11 +54,10 @@ public class ModManager : INotifyCollectionChanged
     {
         _installedMods.Remove(mod.Id);
     }
-
+    
     public void Clear()
     {
-        _installedMods.Clear();
-        System.IO.DirectoryInfo di = new DirectoryInfo("./mods");
+        DirectoryInfo di = new DirectoryInfo(ModWriterOptions.OutputDirectory);
         foreach (FileInfo file in di.GetFiles())
         {
             file.Delete(); 
@@ -68,7 +66,7 @@ public class ModManager : INotifyCollectionChanged
         {
             dir.Delete(true); 
         }
-        CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
 }
