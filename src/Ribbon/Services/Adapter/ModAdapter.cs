@@ -45,6 +45,8 @@ public class ModAdapter
 
     private List<File> GetDependencies(File file)
     {
+        // TODO
+        // make this function recursively search dependencies, not just one level down
         List<File> dependencies = new List<File>();
         foreach (var dependency in file.Dependencies.Where(x => x.RelationType == FileRelationType.RequiredDependency))
         {
