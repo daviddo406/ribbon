@@ -29,6 +29,7 @@ app.Configure(config =>
 {
     config.AddBranch<ConfigureSettings>("configure", add =>
     {
+        add.SetDefaultCommand<ConfigureDefaultCommand>();
         add.AddCommand<ConfigureGameVersionCommand>("gameVersion")
             .WithDescription("Configure game version");
         add.AddCommand<ConfigureModLoaderCommand>("modLoader")
@@ -36,6 +37,7 @@ app.Configure(config =>
         add.AddCommand<ConfigureModWriterCommand>("modOutput")
             .WithDescription("Configure location to output saved mods");
     });
+    
     config.AddCommand<ListModsCommand>("list")
         .WithDescription("Lists all mods.");
     config.AddCommand<AddModCommand>("add")

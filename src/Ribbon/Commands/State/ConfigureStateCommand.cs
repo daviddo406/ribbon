@@ -27,6 +27,16 @@ public class ConfigureModWriterSettings : ConfigureSettings
     public required string OutputDirectory { get; set; }
 }
 
+public class ConfigureDefaultCommand(StateProvider stateProvider) : Command<ConfigureSettings>
+{
+    public override int Execute(CommandContext context, ConfigureSettings settings)
+    {
+        AnsiConsole.MarkupLineInterpolated($"[bold]GameVersion : {stateProvider.Options.GameVersion}[/]");
+        AnsiConsole.MarkupLineInterpolated($"[bold]ModLoader : {stateProvider.Options.ModLoaderType} - {(int)stateProvider.Options.ModLoaderType}[/]");
+        return 0;
+    }
+}
+
 public class ConfigureGameVersionCommand(StateProvider stateProvider) : Command<ConfigureGameVersionSettings>
 {
     public override int Execute(CommandContext context, ConfigureGameVersionSettings settings)
