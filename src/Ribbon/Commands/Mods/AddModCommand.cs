@@ -37,6 +37,9 @@ public class AddModCommand : Command<AddModCommand.Settings>
             return 0;
         }
         
+        // TODOs
+        // verify the mod itself or its dependencies is incompatible with existing mods
+        
         StageView(dmf);
         PromptConfirmation(dmf);
         

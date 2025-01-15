@@ -38,23 +38,29 @@ public class ModAdapter
         
         var dependencies = GetDependencies(actualModFile);
         
-        DetailedModFile dmf = new(mod.Id, mod.Name, actualModFile, _stateProvider.Options.ModLoaderType, _stateProvider.Options.GameVersion, dependencies);
+        DetailedModFile dmf = new(mod.Id, mod.Name, actualModFile, _stateProvider.Options.ModLoaderType, _stateProvider.Options.GameVersion, dependencies.Values.ToList());
         
         return dmf;
     }
 
-    private List<File> GetDependencies(File file)
+    /// <summary>
+    /// Recursively get file dependencies.
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns>Flattened list of <c>File</c>s, representing all dependencies.</returns>
+    private Dictionary<int, File> GetDependencies(File file)
     {
-        // TODO
-        // make this function recursively search dependencies, not just one level down
-        List<File> dependencies = new List<File>();
+        System.Collections.Generic.Dictionary<int, File> dependencies = new();
         foreach (var dependency in file.Dependencies.Where(x => x.RelationType == FileRelationType.RequiredDependency))
         {
             List<File> files = _modRepository.GetModFiles(dependency.ModId, 0).OrderByDescending(x => x.FileDate).ToList();
-            if(files.Count != 0) dependencies.Add(files.First());
+            if (files.Count == 0) continue;
+            
+            var f = files.First();
+            dependencies.TryAdd(f.ModId, f);
+            dependencies = dependencies.Concat(GetDependencies(f).Where(x => !dependencies.ContainsKey(x.Key))).ToDictionary(x => x.Key, x => x.Value);
         }
         
         return dependencies;
     }
-    
 }
