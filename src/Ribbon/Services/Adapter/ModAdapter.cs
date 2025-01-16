@@ -50,7 +50,7 @@ public class ModAdapter
     /// <returns>Flattened list of <c>File</c>s, representing all dependencies.</returns>
     private Dictionary<int, File> GetDependencies(File file)
     {
-        System.Collections.Generic.Dictionary<int, File> dependencies = new();
+        Dictionary<int, File> dependencies = new();
         foreach (var dependency in file.Dependencies.Where(x => x.RelationType == FileRelationType.RequiredDependency))
         {
             List<File> files = _modRepository.GetModFiles(dependency.ModId, 0).OrderByDescending(x => x.FileDate).ToList();
