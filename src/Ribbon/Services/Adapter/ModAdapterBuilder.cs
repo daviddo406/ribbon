@@ -5,25 +5,22 @@ namespace Ribbon.Services.Adapter;
 
 public class ModAdapterBuilder
 {
-    private Adapter.ModAdapter? _modAdapter;
+    private readonly ModAdapter _modAdapter = new ModAdapter();
     
-    private ModRepository _modRepository;
+    private ModRepository? _modRepository;
 
     private readonly StateProvider _stateProvider;
     
     public ModAdapterBuilder(StateProvider stateProvider)
     {
         _stateProvider = stateProvider;
-    }
-
-    public ModAdapter Build()
-    {
-        _modAdapter = new Adapter.ModAdapter(_modRepository, _stateProvider);
-        return _modAdapter;
+        _modAdapter.StateProvider = stateProvider;
     }
     
-    public void AddRepository()
+    public ModAdapter AddRepository()
     {
         _modRepository = new ModRepository(_stateProvider);
+        _modAdapter.ModRepository = _modRepository;
+        return _modAdapter;
     }
 }

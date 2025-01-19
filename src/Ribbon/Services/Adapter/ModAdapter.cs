@@ -9,16 +9,9 @@ namespace Ribbon.Services.Adapter;
 
 public class ModAdapter
 {
-
-    private readonly ModRepository _modRepository;
+    public ModRepository ModRepository;
     
-    private readonly StateProvider _stateProvider;
-    
-    public ModAdapter(ModRepository modRepository, StateProvider stateProvider)
-    {
-        _modRepository = modRepository;
-        _stateProvider = stateProvider;
-    }
+    public StateProvider StateProvider;
     
     /// <summary>
     /// Accepts a modId and creates a <c>DetailedModFile</c> from the original mod.
@@ -27,18 +20,18 @@ public class ModAdapter
     /// </summary>
     public DetailedModFile? Process(string modId, bool isName = false)
     {
-        Mod? mod = isName ? _modRepository.GetModByName(modId) : _modRepository.GetModById(Int32.Parse(modId));
+        Mod? mod = isName ? ModRepository.GetModByName(modId) : ModRepository.GetModById(Int32.Parse(modId));
         
         if (mod == null || mod.IsAvailable == false) return null;
         
-        List<File> modFiles = _modRepository.GetModFiles(mod.Id, 0).OrderByDescending(x => x.FileDate).ToList();
+        List<File> modFiles = ModRepository.GetModFiles(mod.Id, 0).OrderByDescending(x => x.FileDate).ToList();
         if (modFiles.Count == 0) return null;
         
         File actualModFile = modFiles.First();
         
         var dependencies = GetDependencies(actualModFile);
         
-        DetailedModFile dmf = new(mod.Id, mod.Name, actualModFile, _stateProvider.Options.ModLoaderType, _stateProvider.Options.GameVersion, dependencies.Values.ToList());
+        DetailedModFile dmf = new(mod.Id, mod.Name, actualModFile, StateProvider.Options.ModLoaderType, StateProvider.Options.GameVersion, dependencies.Values.ToList());
         
         return dmf;
     }
@@ -53,7 +46,7 @@ public class ModAdapter
         Dictionary<int, File> dependencies = new();
         foreach (var dependency in file.Dependencies.Where(x => x.RelationType == FileRelationType.RequiredDependency))
         {
-            List<File> files = _modRepository.GetModFiles(dependency.ModId, 0).OrderByDescending(x => x.FileDate).ToList();
+            List<File> files = ModRepository.GetModFiles(dependency.ModId, 0).OrderByDescending(x => x.FileDate).ToList();
             if (files.Count == 0) continue;
             
             var f = files.First();

@@ -15,18 +15,14 @@ public class ModManagerBuilder
     {
         _stateProvider = stateProvider;
     }
-
-    public ModManager Build()
-    {
-        _modManager.Initialize();
-        return _modManager;
-    }
     
-    public void AddWriter()
+    public ModManager AddWriter()
     {
         _modWriter = new ModWriter(_stateProvider.Options.ModWriterOptions);
         _modManager.ModWriterOptions = _stateProvider.Options.ModWriterOptions;
         _modManager.Subscribe(_modWriter.Write);
+        _modManager.Initialize();
+        return _modManager;
     }
     
     
