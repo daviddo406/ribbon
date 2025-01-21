@@ -12,13 +12,13 @@ var registrations = new ServiceCollection();
 var stateProvider = new StateProvider();
 registrations.AddSingleton<StateProvider>(_ => stateProvider);
 
-var modManagerBuilder = new ModManagerBuilder(stateProvider);
-modManagerBuilder.AddWriter();
-registrations.AddSingleton<ModManager>(_ => modManagerBuilder.Build());
+var modManagerBuilder = new ModManagerBuilder(stateProvider)
+    .AddWriter();
+registrations.AddSingleton<ModManager>(_ => modManagerBuilder);
 
-var modAdapterBuilder = new ModAdapterBuilder(stateProvider);
-modAdapterBuilder.AddRepository();
-registrations.AddSingleton<ModAdapter>(_ => modAdapterBuilder.Build());
+var modAdapterBuilder = new ModAdapterBuilder(stateProvider)
+    .AddRepository();
+registrations.AddSingleton<ModAdapter>(_ => modAdapterBuilder);
 
 // Create a type registrar and register any dependencies.
 // A type registrar is an adapter for a DI framework.
