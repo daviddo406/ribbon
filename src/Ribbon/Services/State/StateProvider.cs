@@ -9,7 +9,7 @@ public class StateProvider
     
     public readonly StateOptions Options = GetOptions();
     
-    private const string _stateFileName = "ribbon-options.json";
+    private const string _stateFileName = "~/.config/ribbon-options.json";
 
     public StateProvider()
     {
