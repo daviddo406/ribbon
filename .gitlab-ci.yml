@@ -1,0 +1,11 @@
+
+stages:
+  - release
+
+release:ribbon:
+  stage: release
+  script:
+    - dotnet publish src/Ribbon
+  artifacts:
+    - *.exe
+    expire_in: 1 week
