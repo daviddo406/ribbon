@@ -44,9 +44,9 @@ public class ModManager : INotifyCollectionChanged
         {
             foreach (var dependency in dmf.FileDependencies)
             {
-                client.DownloadFile(dependency.DownloadUrl, ModWriterOptions.OutputDirectory + dependency.FileName);
+                client.DownloadFile(dependency.DownloadUrl, Path.Combine(ModWriterOptions.OutputDirectory, dependency.FileName));
             }
-            client.DownloadFile(dmf.File.DownloadUrl, ModWriterOptions.OutputDirectory + dmf.File.FileName);
+            client.DownloadFile(dmf.File.DownloadUrl, Path.Combine(ModWriterOptions.OutputDirectory, dmf.File.FileName));
         }
     }
     
