@@ -44,6 +44,8 @@ app.Configure(config =>
         .WithDescription("Gets the file size for a directory.");
     config.AddCommand<ClearModsCommand>("clear")
         .WithDescription("Clears all mods.");
+    config.AddCommand<ExportModsCommand>("export")
+        .WithDescription("Exports all mods.");
 });
 
 return app.Run(args);
