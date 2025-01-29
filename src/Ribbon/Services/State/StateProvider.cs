@@ -21,6 +21,7 @@ public class StateProvider
     {
         if (File.Exists(_stateFileName) == false)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(_stateFileName));
             return new StateOptions();
         }
         
