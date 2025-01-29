@@ -66,6 +66,7 @@ public class ModManager : INotifyCollectionChanged
         {
             dir.Delete(true); 
         }
+        _installedMods.Clear();
         CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
