@@ -8,21 +8,11 @@ namespace Ribbon.Services.State;
 
 public sealed class StateOptions : INotifyPropertyChanged
 {
-    private ModLoaderType _modLoaderType;
+    public bool isFirstTimeSetup { get; set; } = true;
     
-    public ModLoaderType ModLoaderType
-    {
-        get => _modLoaderType;
-        set => SetField(ref _modLoaderType, value);
-    }
-
-    private string _gameVersion;
+    public ModLoaderType ModLoaderType { get; private set; }
     
-    public string GameVersion 
-    { 
-        get => _gameVersion; 
-        set => SetField(ref _gameVersion, value); 
-    }
+    public string GameVersion { get; private set; }
     
     public ModWriter.ModWriterOptions ModWriterOptions { get; set; } = new();
     
@@ -42,6 +32,18 @@ public sealed class StateOptions : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    public void SetModLoaderType(ModLoaderType modLoaderType)
+    {
+        ModLoaderType = modLoaderType;
+        OnPropertyChanged(nameof(ModWriterOptions));
+    }
+    
+    public void SetGameVersion(string gameVersion)
+    {
+        GameVersion = gameVersion;
+        OnPropertyChanged(nameof(GameVersion));
+    }
+    
     private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;

@@ -38,6 +38,9 @@ app.Configure(config =>
             .WithDescription("Configure location to output saved mods");
     });
     
+    config.AddCommand<SetupWizardCommand>("setup")
+        .WithDescription("Use the setup wizard to quickly configure all required settings.");
+    
     config.AddCommand<ListModsCommand>("list")
         .WithDescription("Lists all mods.");
     config.AddCommand<AddModCommand>("add")

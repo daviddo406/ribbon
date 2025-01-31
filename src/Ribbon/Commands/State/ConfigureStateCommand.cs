@@ -41,7 +41,7 @@ public class ConfigureGameVersionCommand(StateProvider stateProvider) : Command<
 {
     public override int Execute(CommandContext context, ConfigureGameVersionSettings settings)
     {
-        stateProvider.Options.GameVersion = settings.GameVersion;
+        stateProvider.Options.SetGameVersion(settings.GameVersion);
         return 0;
     }
 }
@@ -50,7 +50,7 @@ public class ConfigureModLoaderCommand(StateProvider stateProvider) : Command<Co
 {
     public override int Execute(CommandContext context, ConfigureModLoaderSettings settings)
     {
-        stateProvider.Options.ModLoaderType = settings.ModLoaderType;
+        stateProvider.Options.SetModLoaderType(settings.ModLoaderType);
         return 0;
     }
 }
