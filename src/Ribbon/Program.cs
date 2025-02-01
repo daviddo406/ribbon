@@ -25,6 +25,7 @@ registrations.AddSingleton<ModAdapter>(_ => modAdapterBuilder);
 var registrar = new TypeRegistrar(registrations);
 
 var app = new CommandApp(registrar);
+app.SetDefaultCommand<ListModsCommand>();
 app.Configure(config =>
 {
     config.AddBranch<ConfigureSettings>("configure", add =>
