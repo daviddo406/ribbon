@@ -24,6 +24,10 @@ public static class ListModsView
             table.AddRow(mod.Name, mod.FileDependencies.Count.ToString(), mod.File.FileDate.ToString("dd/MM/yyyy"));
         }
 
+
+        Console.WriteLine();
+        
+
         return table;
     }
     
